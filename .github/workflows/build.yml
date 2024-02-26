@@ -25,7 +25,11 @@ jobs:
       - name: Build font
         run: npm run build
 
+<<<<<<< HEAD
       - name: Upload codicon.ttf as artifact
+=======
+      - name: Upload artifact
+>>>>>>> 8f7db72 (build: Bump script versions)
         uses: actions/upload-artifact@v4
         with:
           name: codicon-font-${{ github.sha }}
