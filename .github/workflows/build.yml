@@ -26,10 +26,14 @@ jobs:
         run: npm run build
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       - name: Upload codicon.ttf as artifact
 =======
       - name: Upload artifact
 >>>>>>> 8f7db72 (build: Bump script versions)
+=======
+      - name: Upload codicon.ttf as artifact
+>>>>>>> 5ce50e4 (build: Use SSH)
         uses: actions/upload-artifact@v4
         with:
           name: codicon-font-${{ github.sha }}
@@ -104,7 +108,7 @@ jobs:
           USER_NAME="GitHub Actions at microsoft/vscode-codicons"
           USER_EMAIL="hylbo@microsoft.com"
 
-          git clone https://github.com/microsoft/vscode.git
+          git clone ssh://git@github.com/microsoft/vscode.git
           cd vscode
           git checkout -b $BRANCH
 
