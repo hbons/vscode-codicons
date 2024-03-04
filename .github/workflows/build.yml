@@ -40,7 +40,7 @@ jobs:
           USER_NAME="GitHub Actions at microsoft/vscode-codicons"
           USER_EMAIL="hylbo@microsoft.com"
 
-          git clone https://github.com/microsoft/vscode.git
+          git clone --depth=1 https://github.com/microsoft/vscode.git
           cd vscode
           git checkout -b $BRANCH
 
