@@ -53,8 +53,8 @@ jobs:
           git commit -m "$MESSAGE"
           git push -f origin $BRANCH
 
-        # echo "${{ secrets.ACCESS_TOKEN }}" > token.txt
-        # gh auth login --with-token < token.txt
+          echo "${{ secrets.ACCESS_TOKEN }}" > token.txt
+          gh auth login --with-token < token.txt
 
           gh pr create \
             --title "$MESSAGE" \
