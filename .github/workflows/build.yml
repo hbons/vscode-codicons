@@ -32,21 +32,35 @@ jobs:
           path: dist/codicon.ttf
 
       - name: Pull Request to microsoft/vscode
-          run: |
-            git clone https://github.com/microsoft/vscode.git && cd vscode
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="update-codicons"
+          MESSAGE="chore: Update codicons to ${{ github.ref }}"
+          USER_NAME="GitHub Actions at microsoft/vscode-codicons"
+          USER_EMAIL="hylbo@microsoft.com"
 
-            git config user.email "hylbo@microsoft.com"
-            git config user.name "GitHub Actions at microsoft/vscode-codicons"
+          git clone https://github.com/microsoft/vscode.git
+          cd vscode
+          git checkout -b $BRANCH
 
-            git checkout -b update-codicons
-            cp ../dist/codicon.ttf src/vs/base/browser/ui/codicons/codicon/
-            cp ../dist/codiconsLibrary.ts src/vs/base/common/
+          cp ../dist/codicon.ttf src/vs/base/browser/ui/codicons/codicon/
+          cp ../dist/codiconsLibrary.ts src/vs/base/common/
 
-            git add .
-            git commit -m "Update codicons to ${{ github.ref }}"
-            git push -f origin update-codicons
+          git add .
+          git config user.name "$USER_NAME"
+          git config user.email "$USER_EMAIL"
+          git commit -m "$MESSAGE"
+          git push -f origin $BRANCH
 
-           # TODO: Create the PR
+        # echo "${{ secrets.ACCESS_TOKEN }}" > token.txt
+        # gh auth login --with-token < token.txt
+
+          gh pr create \
+            --title "$MESSAGE" \
+            --body "" \
+            --base "main" \
+            --head "$BRANCH"
 
   publish:
       runs-on: ubuntu-latest
