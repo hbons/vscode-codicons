@@ -67,15 +67,17 @@ jobs:
     needs: build
 
     steps:
+      - uses: actions/checkout@v4
+
       - name: Write release notes
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') # Only runs on annotaged tags
         run: |
           commits=$(git log --pretty=format:"- %h: %s%n  (%H)%n" ${{ github.event.before }}..${{ github.sha }})
           echo "This release includes: ${commits}" > release_notes.txt
 
       # Create a release when a new tag is pushed. Writes out all new commit messages since the last release.
       - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') # Only runs on annotaged tags
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
