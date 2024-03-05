@@ -73,7 +73,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/') # Only runs on annotated tags
         id: release-notes
         run: | # Get all commits since last tag
-          commits=$(git log --pretty=format:"* %s (%h)" $(git describe --tags --abbrev=0 $(git describe --tags --abbrev=0 --tags --always HEAD^))..HEAD)
+          commits=$(git log --pretty=format:"* %s (%h)" $(git describe --abbrev=0 --tags $(git describe --abbrev=0)^)...$(git describe --abbrev=0)
           echo "This release includes: ${commits}" > release_notes.txt
           echo "::set-output name=release-notes::$(cat release_notes.txt)"
 
