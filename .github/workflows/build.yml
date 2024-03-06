@@ -37,8 +37,6 @@ jobs:
         run: |
           BRANCH="update-codicons"
           MESSAGE="chore: Update codicons to ${{ github.sha }}"
-          USER_NAME="GitHub Actions at microsoft/vscode-codicons"
-          USER_EMAIL="hylbo@microsoft.com"
 
           git clone --depth=1 https://github.com/microsoft/vscode.git
           cd vscode
@@ -46,10 +44,10 @@ jobs:
 
           cp ../dist/codicon.ttf src/vs/base/browser/ui/codicons/codicon/
           cp ../dist/codiconsLibrary.ts src/vs/base/common/
-
           git add .
-          git config --global user.name "$USER_NAME"
-          git config --global user.email "$USER_EMAIL"
+
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
           git commit -m "$MESSAGE"
 
 #          git push -f origin $BRANCH

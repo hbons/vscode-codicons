@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,16 +20,18 @@ jobs:
       - name: Build font
         run: npm run build
 
-  publish:
-      runs-on: ubuntu-latest
+      - name: Update gh-pages branch
+        run: |
+          rm .gitignore
+          git add dist/codicon.csv
+          git add dist/codicon.css
+          git add dist/codicon.html
+          git add dist/codicon.svg
+          git add dist/codicon.ttf
 
-      steps:
-        - name: Push to gh-pages branch
-          run: | # Don't ignore the dist folder except the .ttf
-            rm .gitignore
-            git add dist/codicon.csv
-            git add dist/codicon.css
-            git add dist/codicon.html
-            git add dist/codicon.svg
-            git commit -m "gh-pages: Update website"
-            git push origin gh-pages
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+          git commit -m "chore: Update gh-pages to ${{ github.sha }}"
+
+          git checkout -b gh-pages
+          git push -u -f origin gh-pages
