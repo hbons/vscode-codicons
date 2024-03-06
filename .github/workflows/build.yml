@@ -28,7 +28,7 @@ jobs:
       - name: Upload codicon.ttf as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: codicon-font-${{ github.sha }}
+          name: codicon-font-${{ github.sha }}.ttf
           path: dist/codicon.ttf
 
       - name: PR to microsoft/vscode
@@ -72,13 +72,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # All history
 
       - name: Write release notes
         if: startsWith(github.ref, 'refs/tags/')
         run: | # List all commits since last tag
           commits=$(git log --pretty=format:"* %s (%h)" $(git describe --abbrev=0 --tags `git rev-list --tags --skip=1  --max-count=1`)...)
-          echo "This release includes:\n${commits}" > release_notes.txt
+          echo -e "This release includes:\n${commits}" > release_notes.txt
 
           {
             echo 'release_notes<<EOF'
@@ -88,6 +88,7 @@ jobs:
 
       - name: Create Release 
         if: startsWith(github.ref, 'refs/tags/')
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -97,3 +98,19 @@ jobs:
           draft: true
           prerelease: false
           body: ${{ env.release_notes }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build font
+        run: npm run build
+
+      - name: Upload Release Asset
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: dist/codicon.ttf
+          asset_name: codicon-font-${{ github.ref_name }}.ttf
